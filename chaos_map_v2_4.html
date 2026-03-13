@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1600">
+<title>広告炎上リスク検知 業界カオスマップ 2025年度版</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;900&family=Inter:wght@400;500;600;700;800;900&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#fff;color:#1A1D23;font-family:'Noto Sans JP','Inter',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+  .header{background:linear-gradient(135deg,#0F172A,#1E293B);padding:24px 40px 20px;display:flex;justify-content:space-between;align-items:center}
+  .header-left{display:flex;align-items:center;gap:20px}
+  .header h1{font-family:'Inter','Noto Sans JP',sans-serif;font-weight:900;font-size:24px;color:#fff;letter-spacing:-0.3px}
+  .header-year{background:#3B82F6;color:#fff;font-family:'Inter',sans-serif;font-weight:800;font-size:13px;padding:4px 14px;border-radius:4px;letter-spacing:1px}
+  .header-right{display:flex;gap:8px}
+  .btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:7px 16px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;display:inline-flex;align-items:center;gap:5px}
+  .btn:hover{background:rgba(255,255,255,0.2)}
+  .btn:disabled{opacity:.5;cursor:wait}
+  .btn-primary{background:#3B82F6;border-color:#3B82F6}
+  .btn-google{background:#0F9D58;border-color:#0F9D58}
+  .btn-google:hover{background:#0d8a4d}
+  .map-container{padding:20px 24px 32px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .cat-box{border-radius:10px;overflow:hidden;border:2px solid}
+  .cat-box.span-2{grid-column:span 2}.cat-box.span-full{grid-column:span 3}
+  .cat-box:hover{box-shadow:0 4px 20px rgba(0,0,0,.06)}
+  .cat-box-header{padding:8px 14px;display:flex;align-items:center;gap:6px}
+  .cat-box-header h2{font-size:13px;font-weight:800;color:#fff;letter-spacing:.3px}
+  .cat-box-header .count{margin-left:auto;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);background:rgba(255,255,255,.15);padding:1px 8px;border-radius:8px}
+  .cat-box-body{background:#fff;padding:10px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;min-height:60px}
+  .company{display:flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;border-radius:6px;border:1px solid #E2E8F0;background:#F8FAFC;text-decoration:none;color:inherit;transition:all .12s;cursor:pointer}
+  .company:hover{background:#fff;border-color:#94A3B8;box-shadow:0 2px 8px rgba(0,0,0,.07);transform:translateY(-1px)}
+  .company-logo{width:28px;height:28px;border-radius:5px;background:#fff;border:1px solid #E2E8F0;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+  .company-logo img{width:22px;height:22px;object-fit:contain}
+  .company-logo .initials{width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;color:#fff;border-radius:5px}
+  .company-text{display:flex;flex-direction:column;min-width:0;max-width:140px;overflow:hidden}
+  .company-name{font-size:11.5px;font-weight:700;color:#1E293B;white-space:nowrap;line-height:1.2;overflow:hidden;text-overflow:ellipsis}
+  .company-service{font-size:8.5px;font-weight:400;color:#94A3B8;white-space:nowrap;line-height:1.2;overflow:hidden;text-overflow:ellipsis}
+  .link-arrow{font-size:9px;color:#CBD5E1;margin-left:auto;opacity:0;transition:opacity .12s;flex-shrink:0}
+  .company:hover .link-arrow{opacity:1;color:#3B82F6}
+  .cat-box[data-cat="完全競合（炎上リスク事前検知）"]{border-color:#FECACA;background:#FEF2F2}
+  .cat-box[data-cat="完全競合（炎上リスク事前検知）"] .company{background:#fff}
+  .cat-box[data-cat="ブランドセーフティツール"]{border-color:#FED7AA;background:#FFF7ED}
+  .cat-box[data-cat="ブランドセーフティツール"] .company{background:#fff}
+  .cat-box[data-cat="法務チェックSaaS"]{border-color:#BFDBFE;background:#EFF6FF}
+  .cat-box[data-cat="法務チェックSaaS"] .company{background:#fff}
+  .cat-box[data-cat="クリエイティブ評価AI"]{border-color:#DDD6FE;background:#F5F3FF}
+  .cat-box[data-cat="クリエイティブ評価AI"] .company{background:#fff}
+  .cat-box[data-cat="SNSリスニング・モニタリング"]{border-color:#A5F3FC;background:#ECFEFF}
+  .cat-box[data-cat="SNSリスニング・モニタリング"] .company{background:#fff}
+  .cat-box[data-cat="広告データクローリング"]{border-color:#BBF7D0;background:#F0FDF4}
+  .cat-box[data-cat="広告データクローリング"] .company{background:#fff}
+  .cat-box[data-cat="海外脅威企業（未参入）"]{border-color:#CBD5E1;background:#F8FAFC}
+  .cat-box[data-cat="海外脅威企業（未参入）"] .company{background:#fff}
+  .tooltip{display:none;position:fixed;z-index:1000;background:#fff;border:1px solid #E2E8F0;border-radius:10px;padding:14px 16px;width:330px;box-shadow:0 12px 40px rgba(0,0,0,.12);pointer-events:none}
+  .tooltip.show{display:block}
+  .tt-header{display:flex;align-items:center;gap:8px;font-weight:700;font-size:13px;color:#1E293B;margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid #E2E8F0}
+  .tt-header img{width:18px;height:18px;border-radius:3px}
+  .tt-row{display:flex;justify-content:space-between;padding:3px 0;font-size:11px;border-bottom:1px solid #F8FAFC}
+  .tt-row:last-child{border:none}
+  .tt-key{color:#94A3B8}.tt-val{color:#1E293B;font-weight:600;text-align:right;max-width:180px}
+  .tt-url{display:block;margin-top:8px;padding-top:6px;border-top:1px solid #F1F5F9;font-size:10px;color:#3B82F6;word-break:break-all}
+  .tag-y{display:inline-block;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700;background:#DCFCE7;color:#166534}
+  .tag-n{display:inline-block;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700;background:#FEE2E2;color:#991B1B}
+  .tag-u{display:inline-block;padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700;background:#F3F4F6;color:#6B7280}
+  .footer{padding:14px 40px;border-top:1px solid #E2E8F0;display:flex;justify-content:space-between;font-size:10px;color:#94A3B8;background:#F8FAFC}
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:2000;justify-content:center;align-items:center;backdrop-filter:blur(4px)}
+  .modal-bg.show{display:flex}
+  .modal{background:#fff;border-radius:12px;padding:24px;width:480px;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+  .modal h2{font-size:16px;font-weight:700;margin-bottom:10px}
+  .modal p{font-size:12px;color:#64748B;line-height:1.7;margin-bottom:12px}
+  .drop-zone{border:2px dashed #CBD5E1;border-radius:10px;padding:32px;text-align:center;color:#94A3B8;font-size:12px;cursor:pointer;transition:all .15s;margin-bottom:12px}
+  .drop-zone:hover,.drop-zone.dragover{border-color:#3B82F6;background:#EFF6FF;color:#3B82F6}
+  .overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,.94);z-index:3000;justify-content:center;align-items:center;flex-direction:column}
+  .overlay.show{display:flex}
+  .spinner{width:48px;height:48px;border:4px solid #E2E8F0;border-top-color:#0F9D58;border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 16px}
+  .overlay-msg{font-size:14px;font-weight:600;color:#1E293B;text-align:center}
+  .overlay-sub{font-size:11px;color:#94A3B8;margin-top:6px;text-align:center}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1E293B;color:#fff;padding:14px 24px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,.2);display:flex;align-items:center;gap:10px;animation:toastIn .3s ease-out;white-space:nowrap}
+  .toast a{color:#A5F3FC;text-decoration:underline}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+  @media print{.header-right,.modal-bg,.tooltip,.toast,.overlay{display:none!important}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}.cat-box{break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span class="header-year">2025年度</span>
+    <h1>広告炎上リスク検知 業界カオスマップ</h1>
+  </div>
+  <div class="header-right">
+    <button class="btn" onclick="window.print()">📄 PDF</button>
+    <button class="btn btn-google" onclick="exportGoogleSlides()" id="gslideBtn">
+      <svg width="16" height="16" viewBox="0 0 48 48" style="flex-shrink:0"><rect fill="#FBBC04" x="2" y="2" width="44" height="44" rx="4"/><rect fill="#fff" x="10" y="10" width="28" height="28" rx="2"/><rect fill="#FBBC04" x="14" y="18" width="20" height="3" rx="1"/><rect fill="#FBBC04" x="14" y="24" width="14" height="3" rx="1"/></svg>
+      Google スライド出力
+    </button>
+    <button class="btn" onclick="openSetup()" title="初期設定">⚙️</button>
+    <button class="btn btn-primary" onclick="openModal()">📥 CSV</button>
+  </div>
+</div>
+<div class="map-container" id="map"></div>
+<div class="footer">
+  <div>※ 本カオスマップは公開情報に基づき作成。ロゴ・商標は各社に帰属します。完全競合＝出稿前利用可・動画/画像分析・炎上リスク評価・事例参照型・スコア出力・根拠提示</div>
+  <div>最終更新: 2025年2月</div>
+</div>
+<div class="tooltip" id="tooltip"></div>
+
+<!-- CSV Modal -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <h2>📥 CSVインポート</h2>
+    <p>スプレッドシートからCSVエクスポートしたファイルを読み込みます。</p>
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('csvFile').click()">CSVファイルをドラッグ＆ドロップ or クリック</div>
+    <input type="file" id="csvFile" accept=".csv" style="display:none">
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn" style="color:#1E293B;border-color:#CBD5E1" onclick="closeModal()">キャンセル</button>
+      <button class="btn" style="color:#1E293B;border-color:#CBD5E1" onclick="loadDefault()">サンプルに戻す</button>
+    </div>
+  </div>
+</div>
+
+<!-- Setup Modal -->
+<div class="modal-bg" id="setupBg">
+  <div class="modal" style="width:560px">
+    <h2>⚙️ Google スライド出力 初期設定（初回のみ）</h2>
+    <p style="margin-bottom:6px">Google スライドへ直接出力するには OAuth Client ID が必要です。</p>
+    <div style="background:#FEF9C3;border:1px solid #FDE68A;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:#92400E;line-height:1.7">
+      ⚠️ <strong>file:// では動作しません。</strong>ローカルサーバーで開いてください：<br>
+      ターミナルで <code style="background:#FEF3C7;padding:1px 4px;border-radius:2px">cd ダウンロードフォルダ</code> → <code style="background:#FEF3C7;padding:1px 4px;border-radius:2px">python3 -m http.server 8080</code><br>
+      ブラウザで <code style="background:#FEF3C7;padding:1px 4px;border-radius:2px">http://localhost:8080/chaos_map_v2.html</code> を開く
+    </div>
+    <div style="background:#F0FDF4;border:1px solid #BBF7D0;border-radius:8px;padding:14px 16px;margin-bottom:16px;font-size:11.5px;color:#166534;line-height:1.9">
+      <strong>🔧 Google Cloud セットアップ（3分）</strong><br>
+      ① <a href="https://console.cloud.google.com/apis/credentials" target="_blank" style="color:#166534;font-weight:700">Google Cloud Console</a> → プロジェクト選択（なければ新規作成）<br>
+      ② 「認証情報」→「＋認証情報を作成」→「OAuth クライアント ID」<br>
+      ③ アプリの種類：<strong>ウェブ アプリケーション</strong><br>
+      ④ 「承認済みの JavaScript 生成元」に追加：<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<code id="originUrl" style="background:#DCFCE7;padding:2px 6px;border-radius:3px;user-select:all;cursor:pointer" title="クリックでコピー">http://localhost:8080</code><br>
+      ⑤ 「APIとサービス」→「ライブラリ」→ <strong>Google Slides API</strong> を有効化<br>
+      ⑥ 作成されたクライアント ID を下にペースト
+    </div>
+    <label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px">OAuth Client ID</label>
+    <input type="text" id="clientIdInput" placeholder="xxxxxxxxxxxx-xxxxx.apps.googleusercontent.com" style="width:100%;padding:8px 12px;border:1px solid #CBD5E1;border-radius:6px;font-size:12px;font-family:monospace;margin-bottom:14px;outline:none">
+    <div style="display:flex;gap:8px;justify-content:flex-end;align-items:center">
+      <span id="setupStatus" style="font-size:11px;color:#16A34A;margin-right:auto"></span>
+      <button class="btn" style="color:#1E293B;border-color:#CBD5E1" onclick="closeSetup()">キャンセル</button>
+      <button class="btn" style="background:#0F9D58;color:#fff;border-color:#0F9D58" onclick="saveSetup()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Progress Overlay -->
+<div class="overlay" id="overlay">
+  <div><div class="spinner"></div><div class="overlay-msg" id="ovMsg"></div><div class="overlay-sub" id="ovSub"></div></div>
+</div>
+
+<script>
+// =====================================================================
+// DATA
+// =====================================================================
+const CATS=[
+  {name:"完全競合（炎上リスク事前検知）",color:"#DC2626",bg:"#FEF2F2",border:"#FECACA",icon:"🔥",span:2,order:1},
+  {name:"ブランドセーフティツール",color:"#EA580C",bg:"#FFF7ED",border:"#FED7AA",icon:"🛡️",span:1,order:2},
+  {name:"法務チェックSaaS",color:"#2563EB",bg:"#EFF6FF",border:"#BFDBFE",icon:"⚖️",span:1,order:3},
+  {name:"クリエイティブ評価AI",color:"#7C3AED",bg:"#F5F3FF",border:"#DDD6FE",icon:"🎨",span:1,order:4},
+  {name:"SNSリスニング・モニタリング",color:"#0891B2",bg:"#ECFEFF",border:"#A5F3FC",icon:"📡",span:1,order:5},
+  {name:"広告データクローリング",color:"#16A34A",bg:"#F0FDF4",border:"#BBF7D0",icon:"🔍",span:1,order:6},
+  {name:"海外脅威企業（未参入）",color:"#475569",bg:"#F8FAFC",border:"#CBD5E1",icon:"🌐",span:3,order:7},
+];
+const DEFAULT=[
+  ["完全競合（炎上リスク事前検知）","シエンプレ","クリエイティブリスク診断","","出稿前","動画・画像・テキスト","Yes","Yes","Yes（68項目）","グレード（A/B/C）","Yes","月額10万円〜","大手製菓会社、警察庁","https://www.siemple.co.jp/","#DC2626","1"],
+  ["完全競合（炎上リスク事前検知）","オリコム","GEM® / DEI Quick Checker™","","出稿前","静止画・動画","Yes（DEI特化）","Yes","Yes","スコア（基準値100）","Yes","非公開","JAA","https://www.oricom.co.jp/","#DC2626","3"],
+  ["完全競合（炎上リスク事前検知）","弁護士ドットコム","AI炎上チェッカー","","出稿前","テキスト（画像予定）","Yes","不明","Yes（3軸）","スコア＋グレード","Yes","無料","β段階","https://www.bengo4.com/","#DC2626","4"],
+  ["完全競合（炎上リスク事前検知）","エルテス","コンテンツリスクチェック","","出稿前＋後","テキスト・画像・動画","Yes","Yes","Yes","目視＋報告書","Yes","月額3万円〜","1,000社超","https://eltes-solution.jp/","#DC2626","5"],
+  ["完全競合（炎上リスク事前検知）","リリーフサイン","SNS投稿事前チェック","","出稿前＋後","テキスト・画像・動画","Yes","Yes","Yes","AI＋有人","Yes","要問合せ","1,200社超","https://www.reliefsign.co.jp/","#DC2626","6"],
+  ["ブランドセーフティツール","IAS Japan","Total Media Quality","","出稿前＋後","ディスプレイ・動画・CTV","Yes（GARM準拠）","No","Yes","スコア＋グレード","Yes","数万〜数十万/月","GroupM、SmartNews、電通","https://integralads.com/jp/","#EA580C","1"],
+  ["ブランドセーフティツール","DoubleVerify","Authentic Brand Suitability","","出稿前＋後","ディスプレイ・動画・CTV","Yes","No","Yes","スコア＋レポート","Yes","非公開","LY Corp","https://doubleverify.com/","#EA580C","2"],
+  ["ブランドセーフティツール","Momentum","HYTRA シリーズ","","出稿前＋後","Web・YouTube・アプリ","Yes","一部Yes","Yes","スコア＋リスト","Yes","非公開","電通デジタル、ADK、オプト","https://www.m0mentum.co.jp/","#EA580C","3"],
+  ["ブランドセーフティツール","Spider Labs","Spider AF","","出稿後","クリック/トラフィック","限定的","Yes","Yes","スコア（不正率%）","Yes","月額3万円〜","エン・ジャパン","https://jp.spideraf.com/","#EA580C","4"],
+  ["ブランドセーフティツール","CHEQ","Autonomous Brand Safety","","出稿前","テキスト（NLP）","Yes","No","Yes（200+）","リアルタイムバイナリ","Yes","非公開","CCI","https://www.cheq.ai/","#EA580C","5"],
+  ["ブランドセーフティツール","GumGum","Verity™","","出稿前","テキスト・画像・動画・音声","Yes","No","Yes","スコア＋分類","Yes","非公開","VW、サッポロ、Canon","https://gumgum.com/","#EA580C","6"],
+  ["ブランドセーフティツール","Zefr","Brand Safety & Suitability","","出稿前＋後","動画（フレーム単位）","Yes（GARM）","No","Yes","スコア＋グレード","Yes","非公開","IPG Mediabrands","https://zefr.com/","#EA580C","7"],
+  ["法務チェックSaaS","トラスクエタ","TRUSQUETTA AD","","出稿前＋後","テキスト・画像・動画","不明","Yes","Yes","定性（ハイライト）","Yes","要問合せ","4,000アカウント超","https://ad.trusquetta.net/","#2563EB","1"],
+  ["法務チェックSaaS","Archaic","広告チェックAI","","出稿前","テキスト・画像・動画・URL","No","Yes","Yes","定性（アラート）","Yes","月額制（フリープランあり）","400社超","https://archaic.co.jp/koukokuai/","#2563EB","2"],
+  ["法務チェックSaaS","Crew / サイバー・バズ","RiskMill","","出稿前","テキスト","No","Yes","Yes","定性（ハイライト）","Yes","無料プランあり","サイバー・バズ","https://www.riskmill.com/","#2563EB","3"],
+  ["法務チェックSaaS","DCアーキテクト","機械良文","","出稿前","テキスト・画像・URL","No","Yes","Yes","定性（赤字検出）","Yes","月額1,480円〜","270社以上","https://kikairyobun.com/","#2563EB","4"],
+  ["法務チェックSaaS","池田・染谷法律事務所","Ad-IS","","出稿前","画像・PDF","No","Yes","Yes","チェックリスト","Yes","SaaS月額制","先行提供中","https://ad-is.com/","#2563EB","5"],
+  ["法務チェックSaaS","フォースリー","LOGRIZa","","主に出稿後","テキスト・画像・URL","No","Yes","Yes","定性（薬機法判定）","Yes","月額10万円〜","金融・エステ","https://43s.co.jp/logriza/","#2563EB","6"],
+  ["クリエイティブ評価AI","電通デジタル","∞AI / MONALISA","","出稿前＋後","静止画・動画バナー","No","Yes","不明","スコア（予測CTR等）","不明","電通グループ経由","電通クライアント","https://www.dentsudigital.co.jp/","#7C3AED","1"],
+  ["クリエイティブ評価AI","博報堂DY / アイレップ","Creative Table PINGPONG","","出稿前","画像・動画","間接的Yes","Yes","不明","定性（LLM）","不明","博報堂DYグループ経由","博報堂クライアント","https://www.hakuhodody-holdings.co.jp/","#7C3AED","2"],
+  ["クリエイティブ評価AI","ADK × DAIVID","DAIVID","","出稿前＋後","動画広告","間接的Yes","Yes","不明","スコア（感情）","不明","非公開","ADKクライアント","https://daivid.co/","#7C3AED","3"],
+  ["クリエイティブ評価AI","サイバーエージェント","極予測AI / Shinsa AI","","出稿前","静止画・動画・テキスト","限定的","不明","不明","スコア＋自動審査","不明","成功報酬型","CA関連企業","https://www.cyberagent.co.jp/","#7C3AED","4"],
+  ["クリエイティブ評価AI","CreativeX","CreativeX","","出稿前","動画・画像・テキスト","間接的Yes","Yes","Yes","スコア＋分類","Yes","非公開","Mars等","https://www.creativex.com/","#7C3AED","5"],
+  ["クリエイティブ評価AI","TOPPAN / NeU","ニューロデザインAI","","出稿前","画像","No","不明","不明","スコア（5指標）","不明","非公開","不明","https://solution.toppan.co.jp/","#7C3AED","6"],
+  ["SNSリスニング・モニタリング","プラスアルファ","見える化エンジン","","出稿後","テキスト（SNS・口コミ）","間接的Yes","不明","不明","定量＋ポジネガ判定","不明","初期60万/月15万〜","1,800社以上","https://www.pa-consul.co.jp/mieruka/","#0891B2","1"],
+  ["SNSリスニング・モニタリング","ブレインパッド","Brandwatch","","出稿後","テキスト＋画像","Yes","不明","不明","AIセンチメント","不明","非公開","ライオン、DNP、クックパッド","https://www.brainpad.co.jp/brandwatch/","#0891B2","2"],
+  ["SNSリスニング・モニタリング","Meltwater","Meltwater","","出稿後","テキスト＋画像","Yes","不明","不明","AIセンチメント","不明","非公開","サンリオ、サッポロ、リコー","https://www.meltwater.com/jp","#0891B2","3"],
+  ["SNSリスニング・モニタリング","Sprinklr","Sprinklr Insights","","出稿後","テキスト＋画像＋動画","Yes","不明","不明","AIセンチメント","不明","非公開","サントリー、LINE","https://www.sprinklr.com/jp/","#0891B2","4"],
+  ["SNSリスニング・モニタリング","アディッシュ","MONI / Pazu","","出稿後","テキスト＋画像＋動画＋音声","Yes","不明","不明","目視＋システム","不明","月額5.5万円〜","にじさんじ等","https://monitor.adish.co.jp/","#0891B2","5"],
+  ["SNSリスニング・モニタリング","NTTコム オンライン","Buzz Finder","","出稿後","テキスト（X全量）","Yes","不明","不明","ポジネガ判定","不明","月額8万円〜","不明","","#0891B2","6"],
+  ["SNSリスニング・モニタリング","TDSE","Quid Monitor","","出稿後","テキスト＋画像","Yes","不明","不明","不明","不明","非公開","不明","https://quid.tdse.jp/","#0891B2","7"],
+  ["広告データクローリング","ルーター","アドクロール","","—","画像・動画・テキスト・LP","No","Yes","Yes","—","—","月額5万円〜","広告代理店多数","https://rooter.jp/","#16A34A","1"],
+  ["広告データクローリング","アド.com運営","アド.com","","—","画像・動画・テキスト","No","Yes","Yes","—","—","非公開","CA、CARTA、大広","https://x-ad.com/product/","#16A34A","2"],
+  ["広告データクローリング","ビデオリサーチ","digiads","","—","バナー・テキスト・動画","No","Yes","不明","—","—","非公開","広告代理店","https://www.videor.co.jp/","#16A34A","3"],
+  ["広告データクローリング","Sensor Tower","Pathmatics","","—","ディスプレイ・動画・SNS","No","Yes","Yes","—","—","非公開","2,500社超","https://sensortower.com/","#16A34A","4"],
+  ["広告データクローリング","Similarweb","Ad Intelligence","","—","ディスプレイ・SNS・検索","No","Yes","Yes","—","—","フリーミアム","Google、eBay、Adidas","https://www.similarweb.com/","#16A34A","5"],
+  ["広告データクローリング","Semrush / オロ","AdClarity","","—","リスティング・ディスプレイ","No","Yes","Yes","—","—","Pro $139.95/月〜","JTB、LIXIL","https://semrush.jp/","#16A34A","6"],
+  ["海外脅威企業（未参入）","Zefr","Pre-Screen","","出稿前","動画（フレーム単位）","Yes","No","Yes","スコア＋グレード","Yes","非公開","IPG Mediabrands","https://zefr.com/","#475569","2"],
+  ["海外脅威企業（未参入）","CreativeX","CreativeX","","出稿前","動画・画像・テキスト","間接的Yes","Yes","Yes","スコア＋分類","Yes","非公開","Mars等","https://www.creativex.com/","#475569","3"],
+  ["海外脅威企業（未参入）","AdCreative.ai","Compliance Checker","","出稿前","画像・テキスト","限定的","不明","不明","バイナリ","不明","非公開","不明","https://www.adcreative.ai/","#475569","4"],
+  ["海外脅威企業（未参入）","Kantar","Link AI","","出稿前","動画・画像","間接的Yes","Yes","不明","スコア","Yes","非公開","グローバルブランド","https://www.kantar.com/","#475569","5"],
+];
+let data=[...DEFAULT];
+
+// =====================================================================
+// HTML RENDER (unchanged)
+// =====================================================================
+function catCfg(n){return CATS.find(c=>c.name===n)||{color:"#666",bg:"#F9FAFB",border:"#E5E7EB",icon:"📦",span:1,order:99}}
+function getDm(u){try{return new URL(u).hostname}catch{return null}}
+function logoHtml(d,col){const h=getDm(d[13]),i=d[1].charAt(0),cl=h?`https://logo.clearbit.com/${h}`:'',fv=h?`https://www.google.com/s2/favicons?sz=128&domain=${h}`:'',s=d[3]||cl;if(s){const fb=fv?`this.onerror=null;this.src='${fv}';`:`this.parentElement.innerHTML='<div class="initials" style="background:${col}">${i}</div>';`;return`<img src="${s}" alt="${d[1]}" onerror="${fb}">`}if(fv)return`<img src="${fv}" alt="${d[1]}" onerror="this.parentElement.innerHTML='<div class=\\'initials\\' style=\\'background:${col}\\'>${i}</div>';">`;return`<div class="initials" style="background:${col}">${i}</div>`}
+function render(){const g={};data.forEach(d=>{(g[d[0]]=g[d[0]]||[]).push(d)});const o=Object.keys(g).sort((a,b)=>(catCfg(a).order||99)-(catCfg(b).order||99));document.getElementById('map').innerHTML=o.map(cat=>{const c=catCfg(cat),items=g[cat].sort((a,b)=>(+a[15]||0)-(+b[15]||0)),sp=c.span===2?'span-2':c.span===3?'span-full':'';return`<div class="cat-box ${sp}" data-cat="${cat}" style="border-color:${c.border};background:${c.bg}"><div class="cat-box-header" style="background:${c.color}"><span>${c.icon}</span><h2>${cat}</h2><span class="count">${items.length}社</span></div><div class="cat-box-body">${items.map(d=>{const has=d[13]&&d[13].startsWith('http');return`<a class="company" href="${has?d[13]:'javascript:void(0)'}" ${has?'target="_blank" rel="noopener"':''} data-d='${JSON.stringify(d).replace(/'/g,"&#39;")}' onmouseenter="ttShow(event,this)" onmouseleave="ttHide()"><div class="company-logo">${logoHtml(d,c.color)}</div><div class="company-text"><div class="company-name">${d[1]}</div><div class="company-service">${d[2]}</div></div>${has?'<span class="link-arrow">↗</span>':''}</a>`}).join('')}</div></div>`}).join('')}
+function ttShow(e,el){const d=JSON.parse(el.dataset.d),t=document.getElementById('tooltip'),h=getDm(d[13]),fv=h?`https://www.google.com/s2/favicons?sz=64&domain=${h}`:'',tg=v=>{if(!v||v==='—')return'<span class="tag-u">—</span>';if(v==='Yes'||v.startsWith('Yes'))return`<span class="tag-y">${v}</span>`;if(v==='No')return`<span class="tag-n">${v}</span>`;return`<span class="tag-u">${v}</span>`};t.innerHTML=`<div class="tt-header">${fv?`<img src="${fv}">`:''} ${d[1]} — ${d[2]}</div><div class="tt-row"><span class="tt-key">出稿前/後</span><span class="tt-val">${d[4]}</span></div><div class="tt-row"><span class="tt-key">分析対象</span><span class="tt-val">${d[5]}</span></div><div class="tt-row"><span class="tt-key">炎上リスク評価</span><span class="tt-val">${tg(d[6])}</span></div><div class="tt-row"><span class="tt-key">事例参照型</span><span class="tt-val">${tg(d[7])}</span></div><div class="tt-row"><span class="tt-key">タグ体系</span><span class="tt-val">${d[8]}</span></div><div class="tt-row"><span class="tt-key">判定形式</span><span class="tt-val">${d[9]}</span></div><div class="tt-row"><span class="tt-key">根拠提示</span><span class="tt-val">${tg(d[10])}</span></div><div class="tt-row"><span class="tt-key">価格帯</span><span class="tt-val">${d[11]}</span></div><div class="tt-row"><span class="tt-key">導入企業例</span><span class="tt-val">${d[12]}</span></div>${d[13]?`<div class="tt-url">🔗 ${d[13]}</div>`:''}`;t.classList.add('show');ttPos(e)}
+function ttPos(e){const t=document.getElementById('tooltip');let x=e.clientX+14,y=e.clientY+10;if(x+350>window.innerWidth)x=e.clientX-350;if(y+340>window.innerHeight)y=e.clientY-340;t.style.left=x+'px';t.style.top=y+'px'}
+document.addEventListener('mousemove',e=>{if(document.getElementById('tooltip').classList.contains('show'))ttPos(e)});
+function ttHide(){document.getElementById('tooltip').classList.remove('show')}
+function openModal(){document.getElementById('modalBg').classList.add('show')}
+function closeModal(){document.getElementById('modalBg').classList.remove('show')}
+function loadDefault(){data=[...DEFAULT];render();closeModal()}
+function parseCSV(t){const l=t.split('\n').filter(x=>x.trim());if(l.length<2)return[];const r=[];for(let i=1;i<l.length;i++){const row=[];let c='',q=false;for(let j=0;j<l[i].length;j++){const ch=l[i][j];if(ch==='"'){q=!q;continue}if(ch===','&&!q){row.push(c.trim());c='';continue}c+=ch}row.push(c.trim());if(row.length>=14&&row[0])r.push(row)}return r}
+function handleCSV(f){const r=new FileReader();r.onload=e=>{const d=parseCSV(e.target.result);if(d.length>0){data=d;const s={};d.forEach(row=>{if(row[0]&&!s[row[0]]){s[row[0]]=true;if(!CATS.find(c=>c.name===row[0]))CATS.push({name:row[0],color:row[14]||'#666',bg:'#F9FAFB',border:'#E5E7EB',icon:'📦',span:1,order:CATS.length+1})}});render();closeModal()}};r.readAsText(f,'UTF-8')}
+document.getElementById('csvFile').addEventListener('change',e=>{if(e.target.files[0])handleCSV(e.target.files[0])});
+const dz=document.getElementById('dropZone');dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('dragover')});dz.addEventListener('dragleave',()=>dz.classList.remove('dragover'));dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('dragover');if(e.dataTransfer.files[0])handleCSV(e.dataTransfer.files[0])});
+document.getElementById('modalBg').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
+document.getElementById('originUrl').textContent=window.location.origin&&window.location.origin!=='null'?window.location.origin:'http://localhost:8080';
+render();
+</script>
+
+<!-- Google Identity Services (OAuth) -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+// =====================================================================
+// GOOGLE SLIDES API — Direct creation, NO PowerPoint involved
+// =====================================================================
+
+// --- Settings ---
+function getClientId(){try{return localStorage.getItem('gcid')||''}catch{return''}}
+function setClientId(v){try{localStorage.setItem('gcid',v)}catch{}}
+function openSetup(){document.getElementById('clientIdInput').value=getClientId();document.getElementById('setupStatus').textContent='';document.getElementById('setupBg').classList.add('show')}
+function closeSetup(){document.getElementById('setupBg').classList.remove('show')}
+function saveSetup(){const v=document.getElementById('clientIdInput').value.trim();if(!v){alert('Client IDを入力してください');return}setClientId(v);document.getElementById('setupStatus').textContent='✅ 保存しました';setTimeout(closeSetup,600)}
+document.getElementById('setupBg').addEventListener('click',e=>{if(e.target===e.currentTarget)closeSetup()});
+
+// --- UI helpers ---
+function showOv(m,s){document.getElementById('ovMsg').textContent=m||'';document.getElementById('ovSub').textContent=s||'';document.getElementById('overlay').classList.add('show')}
+function hideOv(){document.getElementById('overlay').classList.remove('show')}
+function toast(html,ms){document.querySelectorAll('.toast').forEach(t=>t.remove());const el=document.createElement('div');el.className='toast';el.innerHTML=html;document.body.appendChild(el);if(ms)setTimeout(()=>el.remove(),ms)}
+
+// --- OAuth ---
+function getToken(clientId){
+  return new Promise((ok,ng)=>{
+    if(typeof google==='undefined'||!google.accounts){ng(new Error('Google認証ライブラリがまだ読み込まれていません。数秒後に再試行してください。'));return}
+    google.accounts.oauth2.initTokenClient({
+      client_id:clientId,
+      scope:'https://www.googleapis.com/auth/presentations https://www.googleapis.com/auth/drive.file',
+      callback:r=>{if(r.error)ng(new Error(r.error_description||r.error));else ok(r.access_token)},
+      error_callback:e=>ng(new Error(e.message||'認証キャンセル'))
+    }).requestAccessToken();
+  });
+}
+
+// --- Slides API helpers ---
+const E = i => Math.round(i * 914400); // inches → EMU
+const PT = p => Math.round(p * 12700);  // points → EMU
+function rgb(hex){hex=hex.replace('#','');return{red:parseInt(hex.substr(0,2),16)/255,green:parseInt(hex.substr(2,2),16)/255,blue:parseInt(hex.substr(4,2),16)/255}}
+let _n=0;
+function uid(){return 'e'+(++_n)}
+
+function rect(sid,id,x,y,w,h){return{createShape:{objectId:id,shapeType:'RECTANGLE',elementProperties:{pageObjectId:sid,size:{width:{magnitude:E(w),unit:'EMU'},height:{magnitude:E(h),unit:'EMU'}},transform:{scaleX:1,scaleY:1,translateX:E(x),translateY:E(y),unit:'EMU'}}}}}
+function textBox(sid,id,x,y,w,h){return{createShape:{objectId:id,shapeType:'TEXT_BOX',elementProperties:{pageObjectId:sid,size:{width:{magnitude:E(w),unit:'EMU'},height:{magnitude:E(h),unit:'EMU'}},transform:{scaleX:1,scaleY:1,translateX:E(x),translateY:E(y),unit:'EMU'}}}}}
+function fillRect(id,fill,outline,ow){
+  const r=[{updateShapeProperties:{objectId:id,shapeProperties:{shapeBackgroundFill:{solidFill:{color:{rgbColor:rgb(fill)}}},...(outline?{outline:{outlineFill:{solidFill:{color:{rgbColor:rgb(outline)}}},weight:{magnitude:PT(ow||0.5),unit:'EMU'}}}:{outline:{propertyState:'NOT_RENDERED'}})},fields:'shapeBackgroundFill.solidFill.color,outline'}}];
+  return r;
+}
+function addText(id,text){return{insertText:{objectId:id,text,insertionIndex:0}}}
+function styleText(id,s,e,opts){
+  const style={},fields=[];
+  if(opts.size){style.fontSize={magnitude:opts.size,unit:'PT'};fields.push('fontSize')}
+  if(opts.font){style.fontFamily=opts.font;fields.push('fontFamily')}
+  if(opts.bold!==undefined){style.bold=opts.bold;fields.push('bold')}
+  if(opts.color){style.foregroundColor={opaqueColor:{rgbColor:rgb(opts.color)}};fields.push('foregroundColor')}
+  if(opts.link){style.link={url:opts.link};fields.push('link')}
+  return{updateTextStyle:{objectId:id,textRange:{type:'FIXED_RANGE',startIndex:s,endIndex:e},style,fields:fields.join(',')}}
+}
+function paraStyle(id,align,lineSpacing){return{updateParagraphStyle:{objectId:id,textRange:{type:'ALL'},style:{alignment:align||'START',...(lineSpacing?{lineSpacing:{magnitude:lineSpacing,unit:'PERCENT'}}:{})},fields:'alignment'+(lineSpacing?',lineSpacing':'')}}}
+
+// =====================================================================
+// BUILD ALL SLIDE CONTENT
+// =====================================================================
+function buildRequests(slideId) {
+  _n=0;
+  const R=[];  // requests array
+  const grouped={};
+  data.forEach(d=>{(grouped[d[0]]=grouped[d[0]]||[]).push(d)});
+  const ordered=Object.keys(grouped).sort((a,b)=>(catCfg(a).order||99)-(catCfg(b).order||99));
+
+  // === Title bar ===
+  const tbar=uid();
+  R.push(rect(slideId,tbar,0,0,10,0.4));
+  R.push(...fillRect(tbar,'#0F172A'));
+  const ttxt=uid();
+  R.push(textBox(slideId,ttxt,0.2,0,6,0.4));
+  R.push(addText(ttxt,'2025年度  広告炎上リスク検知 業界カオスマップ'));
+  R.push(styleText(ttxt,0,6,{size:8,font:'Arial',bold:true,color:'#3B82F6'}));
+  R.push(styleText(ttxt,6,26,{size:10,font:'Arial',bold:true,color:'#FFFFFF'}));
+  R.push(paraStyle(ttxt,'START'));
+
+  // === Legend ===
+  ordered.slice(0,7).forEach((cat,i)=>{
+    const c=catCfg(cat),lx=5.2+(i%4)*1.2,ly=i<4?0.04:0.21;
+    const lid=uid();R.push(rect(slideId,lid,lx,ly,0.1,0.1));R.push(...fillRect(lid,c.color));
+    const ltid=uid();
+    const short=cat.replace('（炎上リスク事前検知）','').replace('・モニタリング','');
+    R.push(textBox(slideId,ltid,lx+0.12,ly-0.01,1.05,0.13));
+    R.push(addText(ltid,short));
+    R.push(styleText(ltid,0,short.length,{size:5,font:'Arial',color:'#94A3B8'}));
+  });
+
+  // === Layout constants ===
+  const M=0.15,G=0.08;
+  const C3=(10-2*M-2*G)/3, C2=(10-2*M-G)/2;
+  const HDR=0.22,CH=0.18,CG=0.03,CP=0.06;
+  function bH(n,cols){return HDR+CP+Math.ceil(n/cols)*(CH+CG)+0.03}
+
+  // === Draw category box ===
+  function drawBox(x,y,w,cat,items,cols){
+    const c=catCfg(cat),h=bH(items.length,cols);
+    // Background
+    const bgId=uid();R.push(rect(slideId,bgId,x,y,w,h));R.push(...fillRect(bgId,c.bg,c.border,0.75));
+    // Header
+    const hdId=uid();R.push(rect(slideId,hdId,x,y,w,HDR));R.push(...fillRect(hdId,c.color));
+    // Header text
+    const htId=uid();
+    const hText=c.icon+'  '+(cat.length>20?cat.substring(0,20)+'…':cat)+'   '+items.length;
+    R.push(textBox(slideId,htId,x+0.06,y,w-0.12,HDR));
+    R.push(addText(htId,hText));
+    const nameEnd=hText.length-String(items.length).length;
+    R.push(styleText(htId,0,nameEnd,{size:7,font:'Arial',bold:true,color:'#FFFFFF'}));
+    R.push(styleText(htId,nameEnd,hText.length,{size:6,font:'Arial',color:'#FFFFFF'}));
+    R.push(paraStyle(htId,'START'));
+
+    // Company chips
+    const cW=(w-CP*2-(cols-1)*0.04)/cols;
+    items.forEach((d,i)=>{
+      const col=i%cols,row=Math.floor(i/cols);
+      const cx=x+CP+col*(cW+0.04),cy=y+HDR+CP+row*(CH+CG);
+      const has=d[13]&&d[13].startsWith('http');
+
+      // Chip as text box with background
+      const chipId=uid();
+      R.push(textBox(slideId,chipId,cx,cy,cW,CH));
+      R.push(...fillRect(chipId,'#FFFFFF',c.border,0.5));
+
+      // Text content
+      const compName=d[1].length>18?d[1].substring(0,17)+'…':d[1];
+      const svcName=d[2].length>22?d[2].substring(0,21)+'…':d[2];
+      const fullText=compName+'\n'+svcName;
+      R.push(addText(chipId,fullText));
+
+      // Style company name (with hyperlink)
+      const nameOpts={size:5.5,font:'Arial',bold:true,color:'#1E293B'};
+      if(has) nameOpts.link=d[13];
+      R.push(styleText(chipId,0,compName.length,nameOpts));
+
+      // Style service name
+      R.push(styleText(chipId,compName.length+1,fullText.length,{size:4.5,font:'Arial',color:'#94A3B8'}));
+      R.push(paraStyle(chipId,'START',85));
+    });
+    return h;
+  }
+
+  // === Row 1: 完全競合(2/3) + ブランドセーフティ(1/3) ===
+  const y1=0.48;
+  const h1a=drawBox(M,y1,C3*2+G,ordered[0],grouped[ordered[0]],3);
+  const h1b=drawBox(M+C3*2+G+G,y1,C3,ordered[1],grouped[ordered[1]],2);
+
+  // === Row 2: 3 equal columns ===
+  const y2=y1+Math.max(h1a,h1b)+G;
+  const h2a=drawBox(M,y2,C3,ordered[2],grouped[ordered[2]],2);
+  const h2b=drawBox(M+C3+G,y2,C3,ordered[3],grouped[ordered[3]],2);
+  const h2c=drawBox(M+2*(C3+G),y2,C3,ordered[4],grouped[ordered[4]],2);
+
+  // === Row 3: 2 half columns ===
+  const y3=y2+Math.max(h2a,h2b,h2c)+G;
+  if(ordered[5]&&grouped[ordered[5]])drawBox(M,y3,C2,ordered[5],grouped[ordered[5]],3);
+  if(ordered[6]&&grouped[ordered[6]])drawBox(M+C2+G,y3,C2,ordered[6],grouped[ordered[6]],3);
+
+  // === Footer ===
+  const ftId=uid();
+  const ftText='※ 公開情報に基づき作成 | 各社名クリックでサイトへ遷移';
+  R.push(textBox(slideId,ftId,0.15,5.35,9.7,0.2));
+  R.push(addText(ftId,ftText));
+  R.push(styleText(ftId,0,ftText.length,{size:5,font:'Arial',color:'#94A3B8'}));
+  R.push(paraStyle(ftId,'CENTER'));
+
+  return R;
+}
+
+// =====================================================================
+// MAIN EXPORT
+// =====================================================================
+async function exportGoogleSlides(){
+  const clientId=getClientId();
+  if(!clientId){openSetup();return}
+  const btn=document.getElementById('gslideBtn');
+  btn.disabled=true;
+  try{
+    // 1. OAuth
+    showOv('Google アカウントに接続中…','ポップアップで認証してください');
+    const token=await getToken(clientId);
+
+    // 2. Create empty presentation via Slides API
+    showOv('Google スライドを作成中…','プレゼンテーションを初期化');
+    const createRes=await fetch('https://slides.googleapis.com/v1/presentations',{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({
+        title:'カオスマップ_2025_'+new Date().toLocaleDateString('ja-JP'),
+        pageSize:{width:{magnitude:9144000,unit:'EMU'},height:{magnitude:5143500,unit:'EMU'}}
+      })
+    });
+    if(!createRes.ok) throw new Error('Slides API作成エラー ('+createRes.status+'): '+await createRes.text());
+    const pres=await createRes.json();
+    const presId=pres.presentationId;
+    const slideId=pres.slides[0].objectId;
+
+    // 3. Build all shape/text requests
+    showOv('Google スライドを作成中…','カオスマップのレイアウトを構築');
+    const requests=buildRequests(slideId);
+
+    // 4. Batch update
+    showOv('Google スライドを作成中…',requests.length+'個の要素を配置中…');
+    const updateRes=await fetch(`https://slides.googleapis.com/v1/presentations/${presId}:batchUpdate`,{
+      method:'POST',
+      headers:{'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({requests})
+    });
+    if(!updateRes.ok) throw new Error('Slides API更新エラー ('+updateRes.status+'): '+await updateRes.text());
+
+    // 5. Open the presentation
+    hideOv();
+    const url=`https://docs.google.com/presentation/d/${presId}/edit`;
+    window.open(url,'_blank');
+    toast(`✅ Google スライドを作成しました &nbsp;<a href="${url}" target="_blank">開く ↗</a>`,12000);
+
+  }catch(err){
+    hideOv();
+    console.error('Export error:',err);
+    if(err.message.includes('キャンセル')||err.message.includes('access_denied')){}
+    else if(err.message.includes('認証ライブラリ'))toast('⚠️ Google認証の読み込み中です。数秒後にもう一度お試しください。',5000);
+    else toast('❌ '+err.message,10000);
+  }finally{btn.disabled=false}
+}
+</script>
+</body>
+</html>
